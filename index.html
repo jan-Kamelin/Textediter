@@ -14,6 +14,12 @@
     <label for="filename">Filename:</label>
     <input type="text" id="filename" placeholder="Enter filename">
     <br><br>
+    <label for="format">Export format:</label>
+    <select id="format">
+        <option value="txt">Plain Text (.txt)</option>
+        <option value="rtf">Rich Text Format (.rtf)</option>
+    </select>
+    <br><br>
     <button onclick="downloadText()">Download Text</button>
 
     <script>
@@ -33,12 +39,25 @@
         // Function to download text
         function downloadText() {
             const text = document.getElementById('editor').value;
-            const filename = document.getElementById('filename').value || "edited_text.txt"; // Use "edited_text.txt" if no filename is provided
-            const blob = new Blob([text], { type: "text/plain" });
-            const url = URL.createObjectURL(blob);
+            const filename = document.getElementById('filename').value || "edited_text"; // Use "edited_text" if no filename is provided
+            const format = document.getElementById('format').value;
+            
+            let blob, url;
+            if (format === 'txt') {
+                blob = new Blob([text], { type: "text/plain" });
+                url = URL.createObjectURL(blob);
+            } else if (format === 'rtf') {
+                const rtfContent = `{\rtf1\ansi\nowidctlpar ${text.replace(/\n/g, "\\par\n")}}`;
+                blob = new Blob([rtfContent], { type: "text/rtf" });
+                url = URL.createObjectURL(blob);
+            } else {
+                console.error("Unsupported format");
+                return;
+            }
+
             const a = document.createElement('a');
             a.href = url;
-            a.download = filename;
+            a.download = filename + '.' + format;
             document.body.appendChild(a);
             a.click();
             window.URL.revokeObjectURL(url);
