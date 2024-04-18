@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Editor</title>
+</head>
+<body>
+    <h2>Text Editor</h2>
+    <input type="file" id="fileInput">
+    <br><br>
+    <textarea id="editor" rows="10" cols="50" placeholder="Enter or edit your text here..."></textarea>
+    <br><br>
+    <button onclick="downloadText()">Download Text</button>
+
+    <script>
+        // Function to handle file input
+        document.getElementById('fileInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const text = e.target.result;
+                    document.getElementById('editor').value = text;
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        // Function to download text
+        function downloadText() {
+            const text = document.getElementById('editor').value;
+            const filename = "edited_text.txt";
+            const blob = new Blob([text], { type: "text/plain" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        }
+    </script>
+</body>
+</html>
