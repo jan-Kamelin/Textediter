@@ -11,6 +11,9 @@
     <br><br>
     <textarea id="editor" rows="10" cols="50" placeholder="Enter or edit your text here..."></textarea>
     <br><br>
+    <label for="filename">Filename:</label>
+    <input type="text" id="filename" placeholder="Enter filename">
+    <br><br>
     <button onclick="downloadText()">Download Text</button>
 
     <script>
@@ -30,7 +33,7 @@
         // Function to download text
         function downloadText() {
             const text = document.getElementById('editor').value;
-            const filename = "edited_text.txt";
+            const filename = document.getElementById('filename').value || "edited_text.txt"; // Use "edited_text.txt" if no filename is provided
             const blob = new Blob([text], { type: "text/plain" });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
